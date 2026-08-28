@@ -1,0 +1,33 @@
+name: Validate skill
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  package:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run regression tests
+        run: python3 -m unittest discover -s tests -v
+      - name: Compile helper scripts
+        run: python3 -m py_compile scripts/create_native_ios_app.py scripts/inspect_native_ios_project.py
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate and build the starter
+        run: |
+          output="$RUNNER_TEMP/SkillSmokeApp"
+          python3 scripts/create_native_ios_app.py \
+            --name "Skill Smoke App" \
+            --bundle-id "com.example.skillsmoke" \
+            --output "$output" \
+            --generate
+          xcodebuild \
+            -project "$output/SkillSmokeApp.xcodeproj" \
+            -scheme SkillSmokeApp \
+            -sdk iphonesimulator \
+            -destination "generic/platform=iOS Simulator" \
+            -derivedDataPath "$RUNNER_TEMP/DerivedData" \
+            CODE_SIGNING_ALLOWED=NO \
+            build

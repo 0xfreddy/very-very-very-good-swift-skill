@@ -1,6 +1,6 @@
 ---
 name: launch-native-ios-app
-description: End-to-end native iOS product engineering for Swift 6, SwiftUI, UIKit, Xcode, and XcodeGen apps—from product contract, architecture, design systems, concurrency, persistence, testing, accessibility, auth, notifications, privacy, and measured performance through signing, App Store Connect, TestFlight, App Review, and launch verification. Use when creating a native iOS app, turning a prototype or DESIGN.md into production SwiftUI, implementing or reviewing launch-critical features, modernizing concurrency or tests, diagnosing build/runtime readiness, optimizing Xcode builds, or preparing and executing a TestFlight/App Store launch.
+description: End-to-end native iOS product and release orchestration for Swift 6, SwiftUI, UIKit, Xcode, and XcodeGen apps—from product contract and architecture through implementation, validation, signing, TestFlight, App Review, and launch evidence. Use when creating an app from a brief, coordinating several launch-critical domains, assessing whole-app ship readiness, or executing a TestFlight/App Store launch. For an isolated SwiftUI, concurrency, testing, Core Data, networking, accessibility, security, or Xcode-build task, prefer the matching specialist skill unless the work must be integrated into a broader product or release plan.
 ---
 
 # Launch Native iOS App
@@ -8,6 +8,8 @@ description: End-to-end native iOS product engineering for Swift 6, SwiftUI, UIK
 Build a native app as a product and release system, not a pile of screens. Preserve a strict chain from user promise to current-source runtime proof to installed release artifact.
 
 Cover only native Swift/SwiftUI/UIKit projects. For Expo, React Native, Flutter, or Kotlin, identify the mismatch and route to that stack's tooling.
+
+Resolve this skill's installed directory from the loaded `SKILL.md` before running bundled scripts. Store that absolute directory as `SKILL_DIR`; never assume the current working directory is the skill directory.
 
 ## Establish the Contract
 
@@ -27,17 +29,18 @@ If creating a new app, settle the production bundle ID before Apple records, aut
 
 - For a new app or major architecture change, read `references/discovery-and-architecture.md` and `references/implementation-and-quality.md`.
 - For UI creation, a visual reference, or any `DESIGN.md`, read `references/design-system-and-ui.md`.
-- For SwiftUI state, identity, navigation, rendering correctness, or performance, read `references/swiftui-quality-and-tracing.md`; use `$swiftui-expert-skill` for a focused implementation or review and `$build-ios-apps:swiftui-performance-audit` for a source-first performance audit when available.
-- For Swift 6 diagnostics, tasks, actors, Sendable, cancellation, or migration, read `references/swift-concurrency-and-isolation.md`; use `$swift-concurrency` for the focused repair when available.
-- For test design, XCTest migration, flakes, or CI filtering, read `references/testing-strategy.md`; use `$swift-testing-expert` for detailed Swift Testing work when available.
-- For slow Xcode builds, read `references/build-performance.md`; use `$xcode-build-orchestrator` for the measured, approval-gated optimization loop when available.
-- For persistence selection or an existing Core Data stack, read `references/persistence-selection.md`; use `$core-data-expert` only when Core Data is actually selected or detected.
+- For SwiftUI state, identity, navigation, rendering correctness, or performance, read `references/swiftui-quality-and-tracing.md`; optionally deepen the work with `$swiftui-expert-skill` or `$build-ios-apps:swiftui-performance-audit` when installed.
+- For Swift 6 diagnostics, tasks, actors, Sendable, cancellation, or migration, read `references/swift-concurrency-and-isolation.md`; optionally deepen the repair with `$swift-concurrency` when installed.
+- For test design, XCTest migration, flakes, or CI filtering, read `references/testing-strategy.md`; optionally deepen the work with `$swift-testing-expert` when installed.
+- For slow Xcode builds, read `references/build-performance.md`; optionally run the measured, approval-gated `$xcode-build-orchestrator` workflow when installed.
+- For persistence selection or an existing Core Data stack, read `references/persistence-selection.md`; use `$core-data-expert` only when Core Data is selected or detected and the skill is installed.
 - For auth, push, deep links, widgets, entitlements, credentials, or secrets, read `references/platform-services.md`.
 - For TestFlight, App Store, App Review, screenshots, signing, privacy, or launch, read `references/release-and-evidence.md` and `references/official-sources.md`.
 - For provenance of the specialist patterns integrated here, read `references/specialist-sources.md`.
+- For standalone behavior and optional skill dependencies, read `references/dependencies.md`.
 - For tool selection, read `references/tools-and-routing.md`.
 - For the concrete lessons extracted from The Odds News repository, read `references/the-odds-news-lessons.md`.
-- For a greenfield XcodeGen app, read `references/starter.md`, then run `scripts/create_native_ios_app.py`.
+- For a greenfield XcodeGen app, read `references/starter.md`, then run `$SKILL_DIR/scripts/create_native_ios_app.py`.
 
 Do not load every reference automatically. Load the files required by the current phase.
 
@@ -46,7 +49,7 @@ Do not load every reference automatically. Load the files required by the curren
 ### 1. Discover
 
 - Inventory project/workspace files, schemes, targets, packages, deployment targets, configs, bundle IDs, entitlements, privacy manifests, backend environments, and tests.
-- Run `scripts/inspect_native_ios_project.py <app-root>` for a fast, read-only inventory; verify its findings against source before acting.
+- Run `python3 "$SKILL_DIR/scripts/inspect_native_ios_project.py" <app-root>` for a fast, read-only inventory; verify its findings against source before acting.
 - Identify current state ownership, navigation, networking, persistence, design tokens, auth, notification ownership, and generated-project inputs.
 - Separate active production code from demos, web/Vite prototypes, stale installed binaries, and experimental branches.
 
@@ -129,7 +132,7 @@ Never report “launched” when a required gate remains unverified. `Upload suc
 For a new app:
 
 ```bash
-python3 scripts/create_native_ios_app.py \
+python3 "$SKILL_DIR/scripts/create_native_ios_app.py" \
   --name "Example App" \
   --bundle-id "com.example.exampleapp" \
   --output "/absolute/path/ExampleApp" \

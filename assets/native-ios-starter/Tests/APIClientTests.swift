@@ -1,12 +1,14 @@
-import XCTest
+import Foundation
+import Testing
 @testable import __SWIFT_NAME__
 
-final class APIClientTests: XCTestCase {
-    func testEndpointAppendsPathComponentsSafely() {
-        let endpoint = APIEndpoint(path: "/v1/items")
+@Test("Endpoint appends path components safely", arguments: [
+    ("/v1/items", "https://api.example.com/v1/items"),
+    ("v1/search", "https://api.example.com/v1/search"),
+])
+func endpointAppendsPathComponentsSafely(path: String, expectedURL: String) throws {
+    let baseURL = try #require(URL(string: "https://api.example.com"))
+    let endpoint = APIEndpoint(path: path)
 
-        let url = endpoint.url(relativeTo: URL(string: "https://api.example.com")!)
-
-        XCTAssertEqual(url.absoluteString, "https://api.example.com/v1/items")
-    }
+    #expect(endpoint.url(relativeTo: baseURL).absoluteString == expectedURL)
 }

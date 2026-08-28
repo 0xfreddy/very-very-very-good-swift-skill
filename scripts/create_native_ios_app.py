@@ -14,6 +14,11 @@ from pathlib import Path
 BUNDLE_ID = re.compile(r"^[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+$")
 TEAM_ID = re.compile(r"^[A-Z0-9]{10}$")
 DEPLOYMENT_TARGET = re.compile(r"^[0-9]+(?:\.[0-9]+){1,2}$")
+TEXT_TEMPLATE_NAMES = {".gitignore"}
+TEXT_TEMPLATE_SUFFIXES = {
+    ".swift", ".yml", ".yaml", ".xcconfig", ".md", ".json", ".plist",
+    ".xcprivacy", ".entitlements", ".strings", ".xcstrings", ".xml",
+}
 
 
 def parse_args() -> argparse.Namespace:
@@ -44,13 +49,18 @@ def validate(args: argparse.Namespace) -> None:
         raise ValueError("--team-id must be 10 uppercase letters or digits")
     if not DEPLOYMENT_TARGET.fullmatch(args.deployment_target):
         raise ValueError("--deployment-target must look like 17.0")
-    if args.output.exists() and any(args.output.iterdir()):
-        raise ValueError(f"destination is not empty: {args.output}")
+    if args.output.exists():
+        if not args.output.is_dir():
+            raise ValueError(f"destination exists and is not a directory: {args.output}")
+        if any(args.output.iterdir()):
+            raise ValueError(f"destination is not empty: {args.output}")
 
 
 def replace_tokens(root: Path, values: dict[str, str]) -> None:
     for path in root.rglob("*"):
         if not path.is_file():
+            continue
+        if path.name not in TEXT_TEMPLATE_NAMES and path.suffix not in TEXT_TEMPLATE_SUFFIXES:
             continue
         text = path.read_text(encoding="utf-8")
         for token, value in values.items():

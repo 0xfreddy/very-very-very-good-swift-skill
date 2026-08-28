@@ -17,7 +17,10 @@ SKIP_DIRS = {
     "node_modules", ".venv", "build", "Archives", ".revyl",
 }
 TEXT_NAMES = {"project.yml", "project.yaml", "Package.swift", "Podfile", "Cartfile"}
-TEXT_SUFFIXES = {".pbxproj", ".plist", ".entitlements", ".xcconfig", ".xcprivacy", ".swift"}
+TEXT_SUFFIXES = {
+    ".pbxproj", ".xcworkspacedata", ".plist", ".entitlements",
+    ".xcconfig", ".xcprivacy", ".swift",
+}
 SENSITIVE_SUFFIXES = {".p8", ".p12", ".mobileprovision"}
 UF_DATALESS = getattr(stat, "UF_DATALESS", 0x40000000)
 PATTERNS = {
@@ -40,7 +43,7 @@ def candidate_files(root: Path, limit: int) -> list[Path]:
     result: list[Path] = []
     rg = shutil.which("rg")
     if rg:
-        command = [rg, "--files"]
+        command = [rg, "--files", "--hidden"]
         for directory in sorted(SKIP_DIRS):
             command.extend(["-g", f"!{directory}/**", "-g", f"!**/{directory}/**"])
         try:
