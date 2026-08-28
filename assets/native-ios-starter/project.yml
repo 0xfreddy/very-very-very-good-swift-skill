@@ -1,0 +1,57 @@
+name: __SWIFT_NAME__
+options:
+  deploymentTarget:
+    iOS: "__DEPLOYMENT_TARGET__"
+configs:
+  Debug: debug
+  Staging: release
+  Release: release
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+targets:
+  __SWIFT_NAME__:
+    type: application
+    platform: iOS
+    sources:
+      - Sources
+    configFiles:
+      Debug: Config/Debug.xcconfig
+      Staging: Config/Staging.xcconfig
+      Release: Config/Release.xcconfig
+    info:
+      path: Sources/Info.plist
+      properties:
+        CFBundleDisplayName: "__APP_NAME__"
+        API_BASE_URL: "$(API_BASE_URL)"
+        UILaunchScreen: {}
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: "__BUNDLE_ID__"
+        PRODUCT_NAME: "__APP_NAME__"
+        PRODUCT_MODULE_NAME: "__SWIFT_NAME__"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        CODE_SIGN_STYLE: Automatic
+        TARGETED_DEVICE_FAMILY: "1,2"
+__TEAM_SETTING__
+    scheme:
+      testTargets:
+        - __SWIFT_NAME__Tests
+  __SWIFT_NAME__Tests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - Tests
+    dependencies:
+      - target: __SWIFT_NAME__
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: "__BUNDLE_ID__.tests"
+        GENERATE_INFOPLIST_FILE: YES
+        CODE_SIGN_STYLE: Automatic
+__TEAM_SETTING__

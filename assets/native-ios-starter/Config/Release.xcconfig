@@ -1,0 +1,2 @@
+API_BASE_URL = https:/$()/api.example.com
+SWIFT_COMPILATION_MODE = wholemodule

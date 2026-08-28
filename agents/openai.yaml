@@ -1,0 +1,4 @@
+interface:
+  display_name: "Launch Native iOS App"
+  short_description: "Engineer and launch production native iOS apps"
+  default_prompt: "Use $launch-native-ios-app to build, validate, optimize, and ship this native Swift app with explicit release evidence."

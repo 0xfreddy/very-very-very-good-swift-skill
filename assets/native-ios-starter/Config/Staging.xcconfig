@@ -1,0 +1,2 @@
+API_BASE_URL = https:/$()/staging-api.example.com
+SWIFT_ACTIVE_COMPILATION_CONDITIONS = $(inherited) STAGING
