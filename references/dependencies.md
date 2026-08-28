@@ -16,6 +16,7 @@ When an optional skill is absent, apply the built-in reference and report only t
 External command-line tools are conditional:
 
 - Python 3 is required for the bundled helper scripts.
+- `xcodebuild` and an installed iOS SDK are required for `benchmark_xcode_builds.py`; `--dry-run` only validates the command contract.
 - XcodeGen is required only when generating the bundled starter or an XcodeGen project.
 - Xcode and its platform SDKs are required for build, Simulator, archive, and signing evidence.
 - App Store Connect or provider tooling is required only for the corresponding authenticated external gate.

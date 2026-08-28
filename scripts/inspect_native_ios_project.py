@@ -24,7 +24,8 @@ TEXT_SUFFIXES = {
 SENSITIVE_SUFFIXES = {".p8", ".p12", ".mobileprovision"}
 UF_DATALESS = getattr(stat, "UF_DATALESS", 0x40000000)
 PATTERNS = {
-    "bundle IDs": re.compile(r"(?:PRODUCT_BUNDLE_IDENTIFIER\s*[:=]|bundleIdPrefix\s*:)[ \t]*[\"']?([^\"'\s;]+)"),
+    "target bundle IDs": re.compile(r"PRODUCT_BUNDLE_IDENTIFIER\s*[:=][ \t]*[\"']?([^\"'\s;]+)"),
+    "bundle ID prefixes": re.compile(r"bundleIdPrefix\s*:[ \t]*[\"']?([^\"'\s;]+)"),
     "Team IDs": re.compile(r"DEVELOPMENT_TEAM\s*[:=][ \t]*[\"']?([A-Z0-9]{10})"),
     "deployment targets": re.compile(r"(?:IPHONEOS_DEPLOYMENT_TARGET\s*[:=]|iOS\s*:)[ \t]*[\"']?([0-9]+(?:\.[0-9]+){1,2})"),
     "marketing versions": re.compile(r"MARKETING_VERSION\s*[:=][ \t]*[\"']?([^\"'\s;]+)"),
@@ -123,7 +124,7 @@ def main() -> int:
             findings[label].extend(match.group(1) for match in pattern.finditer(text))
         if path.suffix in {".swift", ".plist", ".yml", ".yaml"}:
             for line_no, line in enumerate(text.splitlines(), 1):
-                if re.search(r"(?i)\b(TODO|FIXME|COMING SOON|PLACEHOLDER)\b", line):
+                if re.search(r"(?i)\b(TODO|FIXME|COMING SOON)\b", line) or re.search(r"\bPLACEHOLDER\b", line):
                     placeholders.append(f"{relative(path, root)}:{line_no}")
                     if len(placeholders) >= 50:
                         break

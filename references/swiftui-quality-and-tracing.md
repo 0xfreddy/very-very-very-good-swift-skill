@@ -15,6 +15,12 @@ Use this reference for SwiftUI implementation, review, stale UI, navigation, lis
 
 Gate version-specific APIs with `#available` and a real fallback. Adopt Liquid Glass only when explicitly requested and supported by the product's deployment strategy.
 
+## Audit API Age and Source Shape
+
+Check the deployment target before replacing APIs. Prefer modern equivalents for new work, including `NavigationStack`/`NavigationSplitView`, `toolbar`, `foregroundStyle`, `clipShape(.rect(cornerRadius:))`, `animation(_:value:)`, Observation on iOS 17+, and the `Tab` API on iOS 18+. Do not perform unrelated modernization merely because an older API appears.
+
+Run `python3 "$SKILL_DIR/scripts/audit_swift_sources.py" <app-root>` to flag positional collection identity, legacy navigation, unscoped animation, and unusually large view bodies. Confirm each finding against actual data mutation, deployment target, compile behavior, and runtime invalidation before editing.
+
 ## Performance Triage
 
 Start with source inspection:

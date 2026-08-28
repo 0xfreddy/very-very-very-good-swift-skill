@@ -27,6 +27,14 @@ Do not assume new-Xcode defaults. Gate newer syntax such as `@concurrent` on the
 
 For each `Task`, inspect the synchronous prefix before its first `await`. Inherit main-actor context only if that prefix needs UI isolation. Separate delays, retries, and background work from the final main-actor mutation.
 
+Maintain a task-ownership ledger for long-lived or unstructured work:
+
+| Location | Owner | Actor inherited | Cancellation trigger | Result consumed | Deallocation verified |
+| --- | --- | --- | --- | --- | --- |
+| `File.swift:line` | view/model/service | actor or none | event/lifecycle | yes/no | yes/no |
+
+Run `python3 "$SKILL_DIR/scripts/audit_swift_sources.py" <app-root> --include-task-sites` to seed the ledger with detached tasks, ordinary task sites, unsafe isolation escapes, and continuations. Source-pattern matching cannot infer lifecycle ownership, so ordinary task findings are prompts rather than defects.
+
 ## Implement and Verify Narrowly
 
 1. Fix one diagnostic category at a time.

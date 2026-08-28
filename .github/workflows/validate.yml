@@ -12,7 +12,12 @@ jobs:
       - name: Run regression tests
         run: python3 -m unittest discover -s tests -v
       - name: Compile helper scripts
-        run: python3 -m py_compile scripts/create_native_ios_app.py scripts/inspect_native_ios_project.py
+        run: >-
+          python3 -m py_compile
+          scripts/create_native_ios_app.py
+          scripts/inspect_native_ios_project.py
+          scripts/audit_swift_sources.py
+          scripts/benchmark_xcode_builds.py
       - name: Install XcodeGen
         run: brew install xcodegen
       - name: Generate and build the starter

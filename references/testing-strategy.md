@@ -24,6 +24,16 @@ Allow both frameworks in one target during migration. Only import `Testing` in t
 
 Swift Testing runs tests in parallel by default. Isolate shared state first. Use `.serialized` only as a documented transition or when serialization is an actual product constraint.
 
+## Enforce Hermetic Defaults
+
+- Make unit and integration transports injectable. Use immutable per-test stubs, actors, or in-memory repositories instead of mutable global handlers.
+- Give every test its own temporary directory, database/store, clock, locale, and mutable fixture state when those surfaces matter.
+- Fail closed when a hermetic test resolves a production or public-network host. Allow external access only in a separately tagged contract test with explicit authorization and CI configuration.
+- Keep contract tests distinct from hermetic tests in test plans and reports. A live API result is not a unit-test prerequisite.
+- Replace fixed sleeps with awaited observable completion. Classify timeouts as product races, fixture races, callback-bridge defects, or environment failures.
+
+Run `python3 "$SKILL_DIR/scripts/audit_swift_sources.py" <app-root>` to flag external URLs, mutable static URLProtocol-style handlers, fixed waits, and serialized tests for review. Treat findings as prompts, not confirmed defects.
+
 ## Migrate Incrementally
 
 1. Preserve behavior and coverage while converting assertions.

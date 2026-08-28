@@ -41,6 +41,7 @@ If creating a new app, settle the production bundle ID before Apple records, aut
 - For tool selection, read `references/tools-and-routing.md`.
 - For the concrete lessons extracted from The Odds News repository, read `references/the-odds-news-lessons.md`.
 - For a greenfield XcodeGen app, read `references/starter.md`, then run `$SKILL_DIR/scripts/create_native_ios_app.py`.
+- For a read-only implementation-risk pass, run `$SKILL_DIR/scripts/audit_swift_sources.py` and verify every advisory finding before proposing changes.
 
 Do not load every reference automatically. Load the files required by the current phase.
 
@@ -50,6 +51,7 @@ Do not load every reference automatically. Load the files required by the curren
 
 - Inventory project/workspace files, schemes, targets, packages, deployment targets, configs, bundle IDs, entitlements, privacy manifests, backend environments, and tests.
 - Run `python3 "$SKILL_DIR/scripts/inspect_native_ios_project.py" <app-root>` for a fast, read-only inventory; verify its findings against source before acting.
+- Run `python3 "$SKILL_DIR/scripts/audit_swift_sources.py" <app-root>` when the request spans SwiftUI, concurrency, or test reliability; use JSON output only when a downstream tool needs it.
 - Identify current state ownership, navigation, networking, persistence, design tokens, auth, notification ownership, and generated-project inputs.
 - Separate active production code from demos, web/Vite prototypes, stale installed binaries, and experimental branches.
 
@@ -90,6 +92,8 @@ Run the cheapest truthful layer first:
 For new Swift unit and integration tests, prefer Swift Testing when the toolchain supports it. Keep XCTest for UI automation, `XCTMetric`, Objective-C tests, and unsupported cases. Migrate existing suites incrementally; do not rewrite a healthy test suite merely for style.
 
 Make performance claims only from measurements. Audit source before profiling, reproduce the user-visible problem, and compare the same scenario before and after. Treat Simulator, physical-device, build-time, launch-time, UI-hitch, CPU, and memory evidence as different surfaces.
+
+When build performance is in scope and the specialist suite is unavailable, run `python3 "$SKILL_DIR/scripts/benchmark_xcode_builds.py"` with an explicit project/workspace, scheme, destination, configuration, and scenarios. Preserve its timestamped logs and report; do not change build settings until the user approves a recommendation.
 
 Stop retrying an Xcode environment that stalls before compiler processes. Report the environment prerequisite separately from source correctness.
 
@@ -173,6 +177,7 @@ Name the artifact, configuration, simulator/device, version/build, branch/commit
 - Never expose secrets or private key contents.
 - Never infer App Store Connect, provider-dashboard, TestFlight, or production state from local files.
 - Never copy sample code without checking framework age, package/API availability, state ownership, licensing, accessibility, and compilation.
+- Never promote a source-audit heuristic to a confirmed bug without checking the surrounding ownership and runtime behavior.
 - Never copy another app's trade dress, proprietary fonts, icons, or branded assets as a substitute for a product design system.
 - Never use SceneKit as the default for new Apple 3D work.
 - Never claim current-source runtime proof from a stale installed app.

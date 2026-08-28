@@ -16,6 +16,21 @@ Record wall-clock time as the primary metric. Keep cumulative task time as diagn
 
 Store benchmark evidence under `.build-benchmark/`. Verify raw logs and timing categories are non-empty. Keep clean, cached-clean, zero-change, and real incremental results separate.
 
+When the specialist suite is unavailable, use the bundled runner:
+
+```bash
+python3 "$SKILL_DIR/scripts/benchmark_xcode_builds.py" \
+  --project App.xcodeproj \
+  --scheme App \
+  --scenario clean \
+  --scenario cached-clean \
+  --scenario zero-change
+```
+
+For a real edit/rebuild loop, add `--scenario incremental --touch-file Sources/Representative.swift`. The touch changes only modification time. The runner writes timestamped raw logs, `benchmark.json`, and `report.md`; validate machine-produced JSON against `schemas/build-benchmark.schema.json` when a JSON Schema validator is available.
+
+Interpret scenario names precisely. `clean` uses fresh DerivedData, but does not guarantee an empty machine-wide compilation cache. `cached-clean` deliberately preserves machine cache state. Neither result is portable across different commands, Xcode versions, SDKs, destinations, or machines.
+
 ## Diagnose the Critical Path
 
 Classify the evidence before changing anything:
